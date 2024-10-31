@@ -173,9 +173,9 @@ curl --location 'http://localhost:8080/schedules'
 ```json
 {
   "title": "테스트 스케줄",
-  "name": "작성자 이름"
+  "name": "작성자 이름",
   "password": "12345",
-  "created_date": "2024-10-30",
+  "created_date": "2024-10-30"
 }
 ```
 
@@ -241,9 +241,9 @@ curl --location 'http://localhost:8080/schedules{id}'
 ```json
 {
   "title": "제목을 입력하세요",
-  "password": "비밀번호를 입력하세요"
+  "password": "비밀번호를 입력하세요",
   "name": "이름을 입력하세요",
-  "mod_date": "2024-10-30",
+  "mod_date": "2024-10-30"
 }
 ```
 
@@ -330,5 +330,3 @@ error HTTP Status : 400
 
 ## ERD
 ![스크린샷 2024-10-31 오후 9 31 50](https://github.com/user-attachments/assets/90847c4b-84f6-4f99-a501-77333ae6e407)
-
-## SQL
