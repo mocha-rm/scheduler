@@ -329,7 +329,6 @@ error HTTP Status : 400
 
 
 ## ERD
-![일정관리 앱 ERD](https://github.com/user-attachments/assets/b6fad943-8e1c-4aa4-aa60-caa99b8a34bc)
-
+![스크린샷 2024-10-31 오후 9 31 50](https://github.com/user-attachments/assets/90847c4b-84f6-4f99-a501-77333ae6e407)
 
 ## SQL
