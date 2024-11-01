@@ -10,13 +10,23 @@
 | 선택 일정 조회 | GET    | api/schedules/{id} | pram : schedule_id                                  | 단일 응답 | 200: 정상조회, 404: 조회실패 |
 | 일정 생성    | POST   | api/schedules     | body : title, password, datetime                       | 등록 정보  | 200: 정상등록, 400: 생성실패 |
 | 일정 수정    | PUT    | api/schedules/{id} | param:schedule_id<br>body : title, name, password | 수정 정보 | 200: 정상수정, 400: 수정실패 |
-| 일정 삭제    | DELETE | api/schedules/{id} | param:schedule_id<br>body : password                                   | X       | 200: 정상삭제, 400: 삭제실패 |
+| 일정 삭제    | DELETE | api/schedules/{id} | param:schedule_id<br>body : password                                   | 삭제 정보       | 200: 정상삭제, 400: 삭제실패 |
 
 ---
 
 <details>
 <summary>전체 일정 조회</summary>
 <div markdown="1">
+
+
+| **이름** | **타입** | **설명** | **필수여부** |
+| --- | --- | --- | --- |
+| schedule_id | INT | 일정 id | Y |
+| title | VARCHAR(20) | 일정 제목 | Y |
+| name | VARCHAR(10) | 작성자 이름 | Y |
+| created_date | DATETIME | 일정 생성 일 | Y |
+| mod_date | DATETIME | 일정 수정 일 | Y |
+| user_id | INT | 유저 id | Y |
 
 ### Request
 
@@ -29,11 +39,11 @@ curl --location 'http://localhost:8080/schedules'
 파라미터를 입력해서 필터링 할 수 있습니다.(작성자 이름, 날짜)
 
 ```
-curl --location 'http://localhost:8080/schedules{name}'
+curl --location 'http://localhost:8080/schedules?name={name}'
 ```
 
 ```
-curl --location 'http://localhost:8080/schedules{2024-10-31}'
+curl --location 'http://localhost:8080/schedules?created_date={2024-10-31}'
 ```
 
 ### Response
@@ -42,14 +52,6 @@ Success HTTP Status : 200
 
 error HTTP Status : 404
 
-| **이름** | **타입** | **설명** | **필수여부** |
-| --- | --- | --- | --- |
-| schedule_id | INT | 일정 id | Y |
-| title | VARCHAR | 일정 제목 | Y |
-| name | VARCHAR | 작성자 이름 | Y |
-| created_date | DATETIME | 일정 생성 일 | Y |
-| mod_date | DATETIME | 일정 수정 일 | Y |
-| user_id | INT | 유저 id | Y |
 
 ### Example Response
 
@@ -103,12 +105,21 @@ error HTTP Status : 404
 <summary>선택 일정 조회</summary>
 <div markdown="1">
 
+| **이름** | **타입** | **설명** | **필수여부** |
+| --- | --- | --- | --- |
+| schedule_id | INT | 일정 id | Y |
+| title | VARCHAR(20) | 일정 제목 | Y |
+| name | VARCHAR(10) | 작성자 이름 | Y |
+| created_date | DATETIME | 일정 생성 일 | Y |
+| mod_date | DATETIME | 일정 수정 일 | Y |
+| user_id | INT | 유저 id | Y |
+
 ### Request
 
 id로 일정을 조회합니다.
 
 ```
-curl --location 'http://localhost:8080/schedules{id}'
+curl --location 'http://localhost:8080/schedules?id={id}'
 ```
 
 ### Response
@@ -119,14 +130,6 @@ Success HTTP Status : 200
 
 error HTTP Status : 404
 
-| **이름** | **타입** | **설명** | **필수여부** |
-| --- | --- | --- | --- |
-| schedule_id | INT | 일정 id | Y |
-| title | VARCHAR | 일정 제목 | Y |
-| name | VARCHAR | 작성자 이름 | Y |
-| created_date | DATETIME | 일정 생성 일 | Y |
-| mod_date | DATETIME | 일정 수정 일 | Y |
-| user_id | INT | 유저 id | Y |
 
 ### Example Response
 
@@ -164,6 +167,16 @@ error HTTP Status : 404
 <summary>일정 생성</summary>
 <div markdown="1">
 
+| **이름** | **타입** | **설명** | **필수여부** |
+| --- | --- | --- | --- |
+| schedule_id | INT | 일정 id | Y |
+| password | VARCHAR(20) | 비밀번호 | Y |
+| title | VARCHAR(20) | 일정 제목 | Y |
+| name | VARCHAR(10) | 작성자 이름 | Y |
+| created_date | DATETIME | 일정 생성 일 | Y |
+| mod_date | DATETIME | 일정 수정 일 | Y |
+| user_id | INT | 유저 id | Y |
+
 ### Request
 
 ```
@@ -185,15 +198,6 @@ Success HTTP Status : 200
 
 error HTTP Status : 400
 
-| **이름** | **타입** | **설명** | **필수여부** |
-| --- | --- | --- | --- |
-| schedule_id | INT | 일정 id | Y |
-| password | VARCHAR | 비밀번호 | Y |
-| title | VARCHAR | 일정 제목 | Y |
-| name | VARCHAR | 작성자 이름 | Y |
-| created_date | DATETIME | 일정 생성 일 | Y |
-| mod_date | DATETIME | 일정 수정 일 | Y |
-| user_id | INT | 유저 id | Y |
 
 ### Example Response
 
@@ -232,10 +236,20 @@ error HTTP Status : 400
 <summary>일정 수정</summary>
 <div markdown="1">
 
+| **이름** | **타입** | **설명** | **필수여부** |
+| --- | --- | --- | --- |
+| schedule_id | INT | 일정 id | Y |
+| password | VARCHAR(20) | 비밀번호 | Y |
+| title | VARCHAR(10) | 일정 제목 | Y |
+| name | VARCHAR(10) | 작성자 이름 | Y |
+| created_date | DATETIME | 일정 생성 일 | Y |
+| mod_date | DATETIME | 일정 수정 일 | Y |
+| user_id | INT | 유저 id | Y |
+
 ### Request
 
 ```
-curl --location 'http://localhost:8080/schedules{id}'
+curl --location 'http://localhost:8080/schedules?id={id}'
 ```
 
 ```json
@@ -253,15 +267,6 @@ Success HTTP Status : 200
 
 error HTTP Status : 400
 
-| **이름** | **타입** | **설명** | **필수여부** |
-| --- | --- | --- | --- |
-| schedule_id | INT | 일정 id | Y |
-| password | VARCHAR | 비밀번호 | Y |
-| title | VARCHAR | 일정 제목 | Y |
-| name | VARCHAR | 작성자 이름 | Y |
-| created_date | DATETIME | 일정 생성 일 | Y |
-| mod_date | DATETIME | 일정 수정 일 | Y |
-| user_id | INT | 유저 id | Y |
 
 ### Example Response
 
@@ -301,7 +306,7 @@ error HTTP Status : 400
 ### Request
 
 ```
-curl --location 'http://localhost:8080/schedules{id}'
+curl --location 'http://localhost:8080/schedules?id={id}'
 ```
 
 ``` json
@@ -318,9 +323,19 @@ error HTTP Status : 400
 
 ### Example Response
 
+성공
+
 ``` json
 {
-    "result": "Success" or "Fail"
+    "result": "Success"
+}
+ ```
+
+실패
+
+``` json
+{
+    "result": "Fail"
 }
  ```
 
