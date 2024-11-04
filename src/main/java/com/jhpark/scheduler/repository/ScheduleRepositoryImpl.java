@@ -12,7 +12,6 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,18 +43,24 @@ public class ScheduleRepositoryImpl implements ScheduleRepository{
 
     @Override
     public List<ScheduleResponseDto> findAllSchedules() {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULES", scheduleRowMapper());
+        return jdbcTemplate.query("SELECT * FROM SCHEDULES ORDER BY MOD_DATE DESC", scheduleRowMapper());
+    }
+
+    @Override
+    public List<ScheduleResponseDto> findSchedulesByAuthorAndDate(String author, LocalDate mod_date) {
+        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE AUTHOR = ? AND DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC",
+                scheduleRowMapper(), author, mod_date);
     }
 
     @Override
     public List<ScheduleResponseDto> findSchedulesByDate(LocalDate mod_date) {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE DATE(MOD_DATE) = ?"
+        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC"
                 , scheduleRowMapper(), mod_date);
     }
 
     @Override
     public List<ScheduleResponseDto> findSchedulesByAuthor(String author) {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE AUTHOR = ?"
+        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE AUTHOR = ? ORDER BY MOD_DATE DESC"
                 , scheduleRowMapper(), author);
     }
 
