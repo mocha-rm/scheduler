@@ -35,4 +35,9 @@ public class ScheduleServiceImpl implements ScheduleService{
     public List<ScheduleResponseDto> findSchedulesByDate(LocalDate mod_date) {
         return repository.findSchedulesByDate(mod_date);
     }
+
+    @Override
+    public List<ScheduleResponseDto> findSchedulesByAuthor(String author) {
+        return repository.findSchedulesByAuthor(author);
+    }
 }

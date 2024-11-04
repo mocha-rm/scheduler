@@ -33,11 +33,16 @@ public class ScheduleController {
     }
 
     /*
-    * 전체 일정 조회
+    * 전체 일정 조회 (parameter 로 작성자를 넣는경우 해당 작성자가 작성한 전체 목록 조회)
     * */
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules() {
-        return new ResponseEntity<>(scheduleService.findAllSchedules(), HttpStatus.OK);
+    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(@RequestParam(required = false) String author) {
+
+        if (author != null && !author.isEmpty()) {
+            return new ResponseEntity<>(scheduleService.findSchedulesByAuthor(author), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(scheduleService.findAllSchedules(), HttpStatus.OK);
+        }
     }
 
     /*
@@ -47,13 +52,4 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleResponseDto>> findSchedulesByDate(@PathVariable LocalDate mod_date) {
         return new ResponseEntity<>(scheduleService.findSchedulesByDate(mod_date), HttpStatus.OK);
     }
-
-    /*
-     * 작성자로 전체 일정 조회
-     * */
-//    @GetMapping("/{author}")
-//    public ResponseEntity<List<ScheduleResponseDto>> findSchedulesByAuthor(@PathVariable String author) {
-//        return new ResponseEntity<>(scheduleService.findSchedulesByAuthor(author), HttpStatus.OK);
-//    }
-
 }

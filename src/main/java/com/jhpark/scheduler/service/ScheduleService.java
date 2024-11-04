@@ -12,4 +12,5 @@ public interface ScheduleService {
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto);
     public List<ScheduleResponseDto> findAllSchedules();
     public List<ScheduleResponseDto> findSchedulesByDate(LocalDate mod_date);
+    public List<ScheduleResponseDto> findSchedulesByAuthor(String author);
 }

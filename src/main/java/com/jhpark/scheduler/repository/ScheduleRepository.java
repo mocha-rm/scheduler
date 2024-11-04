@@ -12,4 +12,5 @@ public interface ScheduleRepository {
     ScheduleResponseDto saveSchedule(Schedule schedule);
     List<ScheduleResponseDto> findAllSchedules();
     List<ScheduleResponseDto> findSchedulesByDate(LocalDate mod_date);
+    List<ScheduleResponseDto> findSchedulesByAuthor(String author);
 }

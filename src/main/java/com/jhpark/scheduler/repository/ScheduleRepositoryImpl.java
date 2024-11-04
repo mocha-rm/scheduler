@@ -53,6 +53,12 @@ public class ScheduleRepositoryImpl implements ScheduleRepository{
                 , scheduleRowMapper(), mod_date);
     }
 
+    @Override
+    public List<ScheduleResponseDto> findSchedulesByAuthor(String author) {
+        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE AUTHOR = ?"
+                , scheduleRowMapper(), author);
+    }
+
 
     private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
         return new RowMapper<ScheduleResponseDto>() {
@@ -60,8 +66,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepository{
             public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new ScheduleResponseDto(
                         rs.getLong("SCHEDULE_ID"),
-                        rs.getString("TITLE"),
                         rs.getString("AUTHOR"),
+                        rs.getString("TITLE"),
                         rs.getString("PASSWORD"),
                         rs.getTimestamp("CREATED_DATE").toLocalDateTime(),
                         rs.getTimestamp("MOD_DATE").toLocalDateTime()
