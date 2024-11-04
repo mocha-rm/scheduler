@@ -2,6 +2,7 @@ package com.jhpark.scheduler.controller;
 
 import com.jhpark.scheduler.dto.ScheduleRequestDto;
 import com.jhpark.scheduler.dto.ScheduleResponseDto;
+import com.jhpark.scheduler.entity.Schedule;
 import com.jhpark.scheduler.service.ScheduleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,14 @@ public class ScheduleController {
             // 필터링 없이 전체조회
             return new ResponseEntity<>(scheduleService.findAllSchedules(), HttpStatus.OK);
         }
-
     }
+
+    /*
+     * 선택 일정 조회
+     * */
+    @GetMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
+        return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
+    }
+
 }

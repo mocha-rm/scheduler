@@ -2,11 +2,13 @@ package com.jhpark.scheduler.repository;
 
 import com.jhpark.scheduler.dto.ScheduleResponseDto;
 import com.jhpark.scheduler.entity.Schedule;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class ScheduleRepositoryImpl implements ScheduleRepository{
@@ -43,40 +46,63 @@ public class ScheduleRepositoryImpl implements ScheduleRepository{
 
     @Override
     public List<ScheduleResponseDto> findAllSchedules() {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULES ORDER BY MOD_DATE DESC", scheduleRowMapper());
+        return jdbcTemplate.query("SELECT * FROM SCHEDULES ORDER BY MOD_DATE DESC", schedulesRowMapper());
     }
 
     @Override
     public List<ScheduleResponseDto> findSchedulesByAuthorAndDate(String author, LocalDate mod_date) {
         return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE AUTHOR = ? AND DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC",
-                scheduleRowMapper(), author, mod_date);
+                schedulesRowMapper(), author, mod_date);
     }
 
     @Override
     public List<ScheduleResponseDto> findSchedulesByDate(LocalDate mod_date) {
         return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC"
-                , scheduleRowMapper(), mod_date);
+                , schedulesRowMapper(), mod_date);
     }
 
     @Override
     public List<ScheduleResponseDto> findSchedulesByAuthor(String author) {
         return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE AUTHOR = ? ORDER BY MOD_DATE DESC"
-                , scheduleRowMapper(), author);
+                , schedulesRowMapper(), author);
+    }
+
+    @Override
+    public Schedule findScheduleById(Long id) {
+        List<Schedule> result = jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE SCHEDULE_ID = ?"
+                , scheduleRowMapper(), id);
+       return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
 
-    private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
+    private RowMapper<ScheduleResponseDto> schedulesRowMapper() {
         return new RowMapper<ScheduleResponseDto>() {
             @Override
             public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new ScheduleResponseDto(
                         rs.getLong("SCHEDULE_ID"),
-                        rs.getString("AUTHOR"),
                         rs.getString("TITLE"),
+                        rs.getString("AUTHOR"),
                         rs.getString("PASSWORD"),
                         rs.getTimestamp("CREATED_DATE").toLocalDateTime(),
                         rs.getTimestamp("MOD_DATE").toLocalDateTime()
                 );
+            }
+        };
+    }
+
+    private RowMapper<Schedule> scheduleRowMapper() {
+        return new RowMapper<Schedule>() {
+            @Override
+            public Schedule mapRow(ResultSet rs, int rowNum) throws SQLException {
+               return new Schedule(
+                       rs.getLong("SCHEDULE_ID"),
+                       rs.getString("TITLE"),
+                       rs.getString("AUTHOR"),
+                       rs.getString("PASSWORD"),
+                       rs.getTimestamp("CREATED_DATE").toLocalDateTime(),
+                       rs.getTimestamp("MOD_DATE").toLocalDateTime()
+               );
             }
         };
     }

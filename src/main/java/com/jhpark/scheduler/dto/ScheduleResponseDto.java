@@ -17,4 +17,13 @@ public class ScheduleResponseDto {
     private String password;
     private LocalDateTime createdDate;
     private LocalDateTime modDate;
+
+    public ScheduleResponseDto(Schedule schedule) {
+        this.id = schedule.getId();
+        this.title = schedule.getTitle();
+        this.author = schedule.getAuthor();
+        this.password = schedule.getPassword();
+        this.createdDate = schedule.getCreatedDate();
+        this.modDate = schedule.getModDate();
+    }
 }

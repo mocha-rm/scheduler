@@ -12,13 +12,10 @@ import java.time.LocalDateTime;
 public class Schedule {
 
     private Long id; // auto_increment
-    private String title; // 할일 제목
     private String author;// 작성자
+    private String title; // 할일 제목
     private String password;// 비밀번호
     private LocalDateTime createdDate;// 생성일
-    private Timestamp createdDate_;// 수정일
-
-    @Setter
     private LocalDateTime modDate;
     //private int userId;
 
