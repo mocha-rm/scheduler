@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,13 +44,17 @@ public class ScheduleRepositoryImpl implements ScheduleRepository{
 
     @Override
     public List<ScheduleResponseDto> findAllSchedules() {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULES", schduleRowMapper());
+        return jdbcTemplate.query("SELECT * FROM SCHEDULES", scheduleRowMapper());
+    }
+
+    @Override
+    public List<ScheduleResponseDto> findSchedulesByDate(LocalDate mod_date) {
+        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE DATE(MOD_DATE) = ?"
+                , scheduleRowMapper(), mod_date);
     }
 
 
-
-
-    private RowMapper<ScheduleResponseDto> schduleRowMapper() {
+    private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
         return new RowMapper<ScheduleResponseDto>() {
             @Override
             public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {

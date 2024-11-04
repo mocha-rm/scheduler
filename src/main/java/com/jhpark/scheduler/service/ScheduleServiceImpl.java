@@ -6,6 +6,8 @@ import com.jhpark.scheduler.entity.Schedule;
 import com.jhpark.scheduler.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,5 +29,10 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Override
     public List<ScheduleResponseDto> findAllSchedules() {
         return repository.findAllSchedules();
+    }
+
+    @Override
+    public List<ScheduleResponseDto> findSchedulesByDate(LocalDate mod_date) {
+        return repository.findSchedulesByDate(mod_date);
     }
 }
