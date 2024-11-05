@@ -56,7 +56,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponseDto patchScheduleById(Long id, String password, String title, String author) {
-        if (password.equals(repository.findScheduleById(id).getPassword())) {
+        if (password.equals(repository.findScheduleById(id).getPassword())) { //비밀번호 일치 확인
             int updatedRow = repository.patchSchedule(id, title, author);
             if (updatedRow == 0) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -71,7 +71,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public String deleteScheduleById(Long id, String password) {
-        if (password.equals(repository.findScheduleById(id).getPassword())) {
+        if (password.equals(repository.findScheduleById(id).getPassword())) { //비밀번호 일치 확인
             int result = repository.deleteScheduleById(id);
             if (result == 0) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -79,7 +79,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
             return "Delete Success";
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password does not match.");
         }
     }
 }
