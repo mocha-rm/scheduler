@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/schedules")
 public class ScheduleController {
@@ -21,6 +22,7 @@ public class ScheduleController {
     public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
     }
+
 
     /*
      * 일정 생성
@@ -68,5 +70,13 @@ public class ScheduleController {
     @PatchMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> patchScheduleById(@PathVariable Long id, @RequestBody ScheduleRequestDto dto) {
         return new ResponseEntity<>(scheduleService.patchScheduleById(id, dto.getPassword(), dto.getTitle(), dto.getAuthor()), HttpStatus.OK);
+    }
+
+    /*
+     * 일정 삭제
+     * */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteScheduleById(@PathVariable Long id, @RequestBody ScheduleRequestDto dto) {
+        return new ResponseEntity<>(scheduleService.deleteScheduleById(id, dto.getPassword()), HttpStatus.OK);
     }
 }

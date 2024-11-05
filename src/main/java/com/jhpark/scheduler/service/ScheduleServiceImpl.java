@@ -24,7 +24,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto) {
-
         Schedule schedule = new Schedule(dto.getTitle(), dto.getAuthor(), dto.getPassword()); //여기서 now()로 넣어주면 되는거 아닌지 , Schedule 생성자에서 하고 있는게 맞는건지
         return repository.saveSchedule(schedule);
     }
@@ -57,7 +56,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponseDto patchScheduleById(Long id, String password, String title, String author) {
-
         if (password.equals(repository.findScheduleById(id).getPassword())) {
             int updatedRow = repository.patchSchedule(id, title, author);
             if (updatedRow == 0) {
@@ -68,6 +66,20 @@ public class ScheduleServiceImpl implements ScheduleService {
             return new ScheduleResponseDto(schedule);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password does not match.");
+        }
+    }
+
+    @Override
+    public String deleteScheduleById(Long id, String password) {
+        if (password.equals(repository.findScheduleById(id).getPassword())) {
+            int result = repository.deleteScheduleById(id);
+            if (result == 0) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+
+            return "Delete Success";
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
 }

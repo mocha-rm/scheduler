@@ -80,6 +80,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return jdbcTemplate.update("UPDATE SCHEDULES SET TITLE = ?, AUTHOR = ?, MOD_DATE = ? WHERE SCHEDULE_ID = ?", title, author, LocalDateTime.now(), id);
     }
 
+    @Override
+    public int deleteScheduleById(Long id) {
+        return jdbcTemplate.update("DELETE FROM SCHEDULES WHERE SCHEDULE_ID = ?", id);
+    }
+
 
     private RowMapper<ScheduleResponseDto> schedulesRowMapper() {
         return new RowMapper<ScheduleResponseDto>() {
