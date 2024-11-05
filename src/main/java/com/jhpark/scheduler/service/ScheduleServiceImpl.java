@@ -4,15 +4,17 @@ import com.jhpark.scheduler.dto.ScheduleRequestDto;
 import com.jhpark.scheduler.dto.ScheduleResponseDto;
 import com.jhpark.scheduler.entity.Schedule;
 import com.jhpark.scheduler.repository.ScheduleRepository;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
-public class ScheduleServiceImpl implements ScheduleService{
+public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository repository;
 
@@ -51,5 +53,21 @@ public class ScheduleServiceImpl implements ScheduleService{
     public ScheduleResponseDto findScheduleById(Long id) {
         Schedule schedule = repository.findScheduleById(id);
         return new ScheduleResponseDto(schedule);
+    }
+
+    @Override
+    public ScheduleResponseDto patchScheduleById(Long id, String password, String title, String author) {
+
+        if (password.equals(repository.findScheduleById(id).getPassword())) {
+            int updatedRow = repository.patchSchedule(id, title, author);
+            if (updatedRow == 0) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+
+            Schedule schedule = repository.findScheduleById(id);
+            return new ScheduleResponseDto(schedule);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password does not match.");
+        }
     }
 }

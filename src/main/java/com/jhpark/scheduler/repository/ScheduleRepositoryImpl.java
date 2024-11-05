@@ -14,13 +14,14 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
 
 @Repository
-public class ScheduleRepositoryImpl implements ScheduleRepository{
+public class ScheduleRepositoryImpl implements ScheduleRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -71,7 +72,12 @@ public class ScheduleRepositoryImpl implements ScheduleRepository{
     public Schedule findScheduleById(Long id) {
         List<Schedule> result = jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE SCHEDULE_ID = ?"
                 , scheduleRowMapper(), id);
-       return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @Override
+    public int patchSchedule(Long id, String title, String author) {
+        return jdbcTemplate.update("UPDATE SCHEDULES SET TITLE = ?, AUTHOR = ?, MOD_DATE = ? WHERE SCHEDULE_ID = ?", title, author, LocalDateTime.now(), id);
     }
 
 
@@ -95,14 +101,14 @@ public class ScheduleRepositoryImpl implements ScheduleRepository{
         return new RowMapper<Schedule>() {
             @Override
             public Schedule mapRow(ResultSet rs, int rowNum) throws SQLException {
-               return new Schedule(
-                       rs.getLong("SCHEDULE_ID"),
-                       rs.getString("TITLE"),
-                       rs.getString("AUTHOR"),
-                       rs.getString("PASSWORD"),
-                       rs.getTimestamp("CREATED_DATE").toLocalDateTime(),
-                       rs.getTimestamp("MOD_DATE").toLocalDateTime()
-               );
+                return new Schedule(
+                        rs.getLong("SCHEDULE_ID"),
+                        rs.getString("TITLE"),
+                        rs.getString("AUTHOR"),
+                        rs.getString("PASSWORD"),
+                        rs.getTimestamp("CREATED_DATE").toLocalDateTime(),
+                        rs.getTimestamp("MOD_DATE").toLocalDateTime()
+                );
             }
         };
     }

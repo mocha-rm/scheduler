@@ -2,8 +2,8 @@ package com.jhpark.scheduler.controller;
 
 import com.jhpark.scheduler.dto.ScheduleRequestDto;
 import com.jhpark.scheduler.dto.ScheduleResponseDto;
-import com.jhpark.scheduler.entity.Schedule;
 import com.jhpark.scheduler.service.ScheduleService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,4 +62,11 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
+    /*
+     * 일정 수정
+     * */
+    @PatchMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> patchScheduleById(@PathVariable Long id, @RequestBody ScheduleRequestDto dto) {
+        return new ResponseEntity<>(scheduleService.patchScheduleById(id, dto.getPassword(), dto.getTitle(), dto.getAuthor()), HttpStatus.OK);
+    }
 }
