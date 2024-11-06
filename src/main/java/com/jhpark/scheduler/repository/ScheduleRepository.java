@@ -12,11 +12,11 @@ public interface ScheduleRepository {
 
     List<ScheduleResponseDto> findAllSchedules();
 
-    List<ScheduleResponseDto> findSchedulesByAuthorAndDate(String author, LocalDate mod_date);
+    List<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate);
 
-    List<ScheduleResponseDto> findSchedulesByDate(LocalDate mod_date);
+    List<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate);
 
-    List<ScheduleResponseDto> findSchedulesByAuthor(String author);
+    List<ScheduleResponseDto> findSchedulesByAuthor(Long authorId);
 
     Schedule findScheduleById(Long id);
 

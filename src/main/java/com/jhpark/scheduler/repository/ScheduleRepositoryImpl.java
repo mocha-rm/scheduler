@@ -51,21 +51,21 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesByAuthorAndDate(String author, LocalDate mod_date) {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE AUTHOR = ? AND DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC",
-                schedulesRowMapper(), author, mod_date);
+    public List<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate) {
+        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE USER_ID = ? AND DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC",
+                schedulesRowMapper(), authorId, modDate);
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesByDate(LocalDate mod_date) {
+    public List<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate) {
         return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC"
-                , schedulesRowMapper(), mod_date);
+                , schedulesRowMapper(), modDate);
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesByAuthor(String author) {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE AUTHOR = ? ORDER BY MOD_DATE DESC"
-                , schedulesRowMapper(), author);
+    public List<ScheduleResponseDto> findSchedulesByAuthor(Long authorId) {
+        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE USER_ID = ? ORDER BY MOD_DATE DESC"
+                , schedulesRowMapper(), authorId);
     }
 
     @Override

@@ -13,11 +13,11 @@ public interface ScheduleService {
 
     public List<ScheduleResponseDto> findAllSchedules();
 
-    public List<ScheduleResponseDto> findSchedulesByAuthorAndDate(String author, LocalDate mod_date);
+    public List<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate);
 
-    public List<ScheduleResponseDto> findSchedulesByDate(LocalDate mod_date);
+    public List<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate);
 
-    public List<ScheduleResponseDto> findSchedulesByAuthor(String author);
+    public List<ScheduleResponseDto> findSchedulesByAuthor(Long authorId);
 
     public ScheduleResponseDto findScheduleById(Long id);
 

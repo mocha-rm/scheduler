@@ -37,18 +37,18 @@ public class ScheduleController {
      * */
     @GetMapping
     public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(
-            @RequestParam Optional<String> author,
-            @RequestParam Optional<LocalDate> mod_date
+            @RequestParam Optional<Long> authorId,
+            @RequestParam Optional<LocalDate> modDate
     ) {
-        if (author.isPresent() && mod_date.isPresent()) {
+        if (authorId.isPresent() && modDate.isPresent()) {
             //작성자와 날짜 둘 다 조건으로 넣어서 전체조회
-            return new ResponseEntity<>(scheduleService.findSchedulesByAuthorAndDate(author.get(), mod_date.get()), HttpStatus.OK);
-        } else if (author.isPresent()) {
+            return new ResponseEntity<>(scheduleService.findSchedulesByAuthorAndDate(authorId.get(), modDate.get()), HttpStatus.OK);
+        } else if (authorId.isPresent()) {
             // 작성자를 조건으로 넣어서 전체조회
-            return new ResponseEntity<>(scheduleService.findSchedulesByAuthor(author.get()), HttpStatus.OK);
-        } else if (mod_date.isPresent()) {
+            return new ResponseEntity<>(scheduleService.findSchedulesByAuthor(authorId.get()), HttpStatus.OK);
+        } else if (modDate.isPresent()) {
             // 날짜를 조건으로 넣어서 전체조회
-            return new ResponseEntity<>(scheduleService.findSchedulesByDate(mod_date.get()), HttpStatus.OK);
+            return new ResponseEntity<>(scheduleService.findSchedulesByDate(modDate.get()), HttpStatus.OK);
         } else {
             // 필터링 없이 전체조회
             return new ResponseEntity<>(scheduleService.findAllSchedules(), HttpStatus.OK);
