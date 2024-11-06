@@ -27,9 +27,9 @@ public class ScheduleController {
     /*
      * 일정 생성
      * */
-    @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto dto) {
-        return new ResponseEntity<>(scheduleService.saveSchedule(dto), HttpStatus.CREATED);
+    @PostMapping("/{authorId}")
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@PathVariable Long authorId, @RequestBody ScheduleRequestDto dto) {
+        return new ResponseEntity<>(scheduleService.saveSchedule(dto, authorId), HttpStatus.CREATED);
     }
 
     /*

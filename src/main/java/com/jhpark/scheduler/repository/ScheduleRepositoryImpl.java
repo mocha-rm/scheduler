@@ -35,14 +35,14 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         jdbcInsert.withTableName("SCHEDULES").usingGeneratedKeyColumns("SCHEDULE_ID");
 
         Map<String, Object> params = new HashMap<>();
+        params.put("USER_ID", schedule.getAuthorId());
         params.put("TITLE", schedule.getTitle());
-        params.put("AUTHOR", schedule.getAuthor());
         params.put("PASSWORD", schedule.getPassword());
         params.put("CREATED_DATE", schedule.getCreatedDate());
         params.put("MOD_DATE", schedule.getModDate());
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(params));
-        return new ScheduleResponseDto(key.longValue(), schedule.getTitle(), schedule.getAuthor(), schedule.getPassword(), schedule.getCreatedDate(), schedule.getModDate());
+        return new ScheduleResponseDto(key.longValue(), schedule.getAuthorId(), schedule.getTitle(), schedule.getPassword(), schedule.getCreatedDate(), schedule.getModDate());
     }
 
     @Override
@@ -92,8 +92,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
             public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new ScheduleResponseDto(
                         rs.getLong("SCHEDULE_ID"),
+                        rs.getLong("USER_ID"),
                         rs.getString("TITLE"),
-                        rs.getString("AUTHOR"),
                         rs.getString("PASSWORD"),
                         rs.getTimestamp("CREATED_DATE").toLocalDateTime(),
                         rs.getTimestamp("MOD_DATE").toLocalDateTime()
@@ -108,8 +108,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
             public Schedule mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new Schedule(
                         rs.getLong("SCHEDULE_ID"),
+                        rs.getLong("USER_ID"),
                         rs.getString("TITLE"),
-                        rs.getString("AUTHOR"),
                         rs.getString("PASSWORD"),
                         rs.getTimestamp("CREATED_DATE").toLocalDateTime(),
                         rs.getTimestamp("MOD_DATE").toLocalDateTime()

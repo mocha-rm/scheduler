@@ -9,7 +9,7 @@ import java.util.List;
 
 
 public interface ScheduleService {
-    public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto);
+    public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto, Long authorId);
 
     public List<ScheduleResponseDto> findAllSchedules();
 

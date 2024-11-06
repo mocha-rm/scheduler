@@ -10,16 +10,15 @@ import java.time.LocalDateTime;
 public class Schedule {
 
     private Long id; // auto_increment
+    private Long authorId; // 작성자 아이디 (USERS 테이블의 FK)
     private String title; // 할일 제목
-    private String author;// 작성자
-    private String password;// 비밀번호
-    private LocalDateTime createdDate;// 생성일
-    private LocalDateTime modDate;
-    //private int userId;
+    private String password; // 비밀번호
+    private LocalDateTime createdDate; // 생성일
+    private LocalDateTime modDate; // 수정일
 
-    public Schedule(String title, String author, String password) {
+    public Schedule(Long authorId, String title, String password) {
+        this.authorId = authorId;
         this.title = title;
-        this.author = author;
         this.password = password;
         this.createdDate = LocalDateTime.now();
         this.modDate = LocalDateTime.now();

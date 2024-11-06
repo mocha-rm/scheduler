@@ -12,16 +12,16 @@ import java.time.LocalDateTime;
 public class ScheduleResponseDto {
 
     private Long id;
+    private Long authorId;
     private String title;
-    private String author;
     private String password;
     private LocalDateTime createdDate;
     private LocalDateTime modDate;
 
     public ScheduleResponseDto(Schedule schedule) {
         this.id = schedule.getId();
+        this.authorId = schedule.getAuthorId();
         this.title = schedule.getTitle();
-        this.author = schedule.getAuthor();
         this.password = schedule.getPassword();
         this.createdDate = schedule.getCreatedDate();
         this.modDate = schedule.getModDate();

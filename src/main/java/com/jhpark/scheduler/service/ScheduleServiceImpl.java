@@ -23,8 +23,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto) {
-        Schedule schedule = new Schedule(dto.getTitle(), dto.getAuthor(), dto.getPassword()); //여기서 now()로 넣어주면 되는거 아닌지 , Schedule 생성자에서 하고 있는게 맞는건지
+    public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto, Long authorId) {
+        Schedule schedule = new Schedule(authorId, dto.getTitle(), dto.getPassword());
         return repository.saveSchedule(schedule);
     }
 
