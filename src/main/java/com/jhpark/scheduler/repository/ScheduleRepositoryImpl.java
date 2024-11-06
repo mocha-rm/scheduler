@@ -76,8 +76,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public int patchSchedule(Long id, String title, String author) {
-        return jdbcTemplate.update("UPDATE SCHEDULES SET TITLE = ?, AUTHOR = ?, MOD_DATE = ? WHERE SCHEDULE_ID = ?", title, author, LocalDateTime.now(), id);
+    public int patchSchedule(Long id, String title) {
+        return jdbcTemplate.update("UPDATE SCHEDULES SET TITLE = ?, MOD_DATE = ? WHERE SCHEDULE_ID = ?", title, LocalDateTime.now(), id);
     }
 
     @Override

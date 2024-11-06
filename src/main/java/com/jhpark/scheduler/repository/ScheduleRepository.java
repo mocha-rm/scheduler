@@ -20,7 +20,7 @@ public interface ScheduleRepository {
 
     Schedule findScheduleById(Long id);
 
-    int patchSchedule(Long id, String title, String author);
+    int patchSchedule(Long id, String title);
 
     int deleteScheduleById(Long id);
 }

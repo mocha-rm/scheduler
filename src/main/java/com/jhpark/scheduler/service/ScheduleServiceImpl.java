@@ -55,9 +55,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleResponseDto patchScheduleById(Long id, String password, String title, String author) {
+    public ScheduleResponseDto patchScheduleById(Long id, String password, String title) {
         if (password.equals(repository.findScheduleById(id).getPassword())) { //비밀번호 일치 확인
-            int updatedRow = repository.patchSchedule(id, title, author);
+            int updatedRow = repository.patchSchedule(id, title);
             if (updatedRow == 0) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             }
