@@ -2,6 +2,8 @@ package com.jhpark.scheduler.service;
 
 import com.jhpark.scheduler.dto.ScheduleRequestDto;
 import com.jhpark.scheduler.dto.ScheduleResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 import java.time.LocalDate;
@@ -11,13 +13,13 @@ import java.util.List;
 public interface ScheduleService {
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto, Long authorId);
 
-    public List<ScheduleResponseDto> findAllSchedules();
+    public Page<ScheduleResponseDto> findAllSchedules(Pageable pageable);
 
-    public List<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate);
+    public Page<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate, Pageable pageable);
 
-    public List<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate);
+    public Page<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate, Pageable pageable);
 
-    public List<ScheduleResponseDto> findSchedulesByAuthor(Long authorId);
+    public Page<ScheduleResponseDto> findSchedulesByAuthor(Long authorId, Pageable pageable);
 
     public ScheduleResponseDto findScheduleById(Long id);
 

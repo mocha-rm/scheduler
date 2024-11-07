@@ -2,6 +2,7 @@ package com.jhpark.scheduler.repository;
 
 import com.jhpark.scheduler.dto.ScheduleResponseDto;
 import com.jhpark.scheduler.entity.Schedule;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -46,26 +47,30 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public List<ScheduleResponseDto> findAllSchedules() {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULES ORDER BY MOD_DATE DESC", schedulesRowMapper());
+    public List<ScheduleResponseDto> findAllSchedules(Pageable pageable) {
+        String sql = "SELECT * FROM SCHEDULES ORDER BY MOD_DATE DESC LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, schedulesRowMapper(), pageable.getPageSize(), pageable.getOffset());
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate) {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE USER_ID = ? AND DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC",
-                schedulesRowMapper(), authorId, modDate);
+    public List<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate, Pageable pageable) {
+        String sql = "SELECT * FROM SCHEDULES WHERE USER_ID = ? AND DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql,
+                schedulesRowMapper(), authorId, modDate, pageable.getPageSize(), pageable.getOffset());
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate) {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC"
-                , schedulesRowMapper(), modDate);
+    public List<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate, Pageable pageable) {
+        String sql = "SELECT * FROM SCHEDULES WHERE DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, schedulesRowMapper(), modDate, pageable.getPageSize(), pageable.getOffset());
+
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesByAuthor(Long authorId) {
-        return jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE USER_ID = ? ORDER BY MOD_DATE DESC"
-                , schedulesRowMapper(), authorId);
+    public List<ScheduleResponseDto> findSchedulesByAuthor(Long authorId, Pageable pageable) {
+        String sql = "SELECT * FROM SCHEDULES WHERE USER_ID = ? ORDER BY MOD_DATE DESC LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, schedulesRowMapper(), authorId, pageable.getPageSize(), pageable.getOffset());
+
     }
 
     @Override
@@ -116,5 +121,29 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 );
             }
         };
+    }
+
+    @Override
+    public int countByAuthorAndDate(Long authorId, LocalDate modDate) {
+        String sql = "SELECT COUNT(*) FROM SCHEDULES WHERE USER_ID = ? AND DATE(MOD_DATE) = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, authorId, modDate);
+    }
+
+    @Override
+    public int countByAuthor(Long authorId) {
+        String sql = "SELECT COUNT(USER_ID) FROM SCHEDULES WHERE USER_ID = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, authorId);
+    }
+
+    @Override
+    public int countByDate(LocalDate modDate) {
+        String sql = "SELECT COUNT(MOD_DATE) FROM SCHEDULES WHERE MOD_DATE = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, modDate);
+    }
+
+    @Override
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM SCHEDULES";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 }

@@ -4,12 +4,14 @@ import com.jhpark.scheduler.dto.ScheduleRequestDto;
 import com.jhpark.scheduler.dto.ScheduleResponseDto;
 import com.jhpark.scheduler.service.ScheduleService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -23,7 +25,6 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-
     /*
      * 일정 생성
      * */
@@ -36,23 +37,30 @@ public class ScheduleController {
      * 전체 일정 조회
      * */
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(
+    public ResponseEntity<Page<ScheduleResponseDto>> findAllSchedules(
             @RequestParam Optional<Long> authorId,
-            @RequestParam Optional<LocalDate> modDate
+            @RequestParam Optional<LocalDate> modDate,
+            @PageableDefault(page = 0, size = 10) Pageable pageable
     ) {
+        Page<ScheduleResponseDto> result = null;
         if (authorId.isPresent() && modDate.isPresent()) {
             //작성자와 날짜 둘 다 조건으로 넣어서 전체조회
-            return new ResponseEntity<>(scheduleService.findSchedulesByAuthorAndDate(authorId.get(), modDate.get()), HttpStatus.OK);
+            // http://localhost:8080/schedules?authorId=1&modDate=2024-11-01
+            result = scheduleService.findSchedulesByAuthorAndDate(authorId.get(), modDate.get(), pageable);
         } else if (authorId.isPresent()) {
             // 작성자를 조건으로 넣어서 전체조회
-            return new ResponseEntity<>(scheduleService.findSchedulesByAuthor(authorId.get()), HttpStatus.OK);
+            // http://localhost:8080/schedules?authorId=1&modDate=2024-11-07
+            result = scheduleService.findSchedulesByAuthor(authorId.get(), pageable);
         } else if (modDate.isPresent()) {
             // 날짜를 조건으로 넣어서 전체조회
-            return new ResponseEntity<>(scheduleService.findSchedulesByDate(modDate.get()), HttpStatus.OK);
+            // http://localhost:8080/schedules?modDate=2024-11-07
+            result = scheduleService.findSchedulesByDate(modDate.get(), pageable);
         } else {
             // 필터링 없이 전체조회
-            return new ResponseEntity<>(scheduleService.findAllSchedules(), HttpStatus.OK);
+            // http://localhost:8080/schedules
+            result = scheduleService.findAllSchedules(pageable);
         }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /*

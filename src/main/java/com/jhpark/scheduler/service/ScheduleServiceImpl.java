@@ -5,10 +5,14 @@ import com.jhpark.scheduler.dto.ScheduleResponseDto;
 import com.jhpark.scheduler.entity.Schedule;
 import com.jhpark.scheduler.repository.ScheduleRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.plaf.basic.BasicOptionPaneUI;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,23 +33,35 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleResponseDto> findAllSchedules() {
-        return repository.findAllSchedules();
+    public Page<ScheduleResponseDto> findAllSchedules(Pageable pageable) {
+        List<ScheduleResponseDto> schedules = repository.findAllSchedules(pageable);
+        int total = repository.countAll();
+
+        return new PageImpl<>(schedules, pageable, total);
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate) {
-        return repository.findSchedulesByAuthorAndDate(authorId, modDate);
+    public Page<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate, Pageable pageable) {
+        List<ScheduleResponseDto> schedules = repository.findSchedulesByAuthorAndDate(authorId, modDate, pageable);
+        int total = repository.countByAuthorAndDate(authorId, modDate);
+
+        return new PageImpl<>(schedules, pageable, total);
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate) {
-        return repository.findSchedulesByDate(modDate);
+    public Page<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate, Pageable pageable) {
+        List<ScheduleResponseDto> schedules = repository.findSchedulesByDate(modDate, pageable);
+        int total = repository.countByDate(modDate);
+
+        return new PageImpl<>(schedules, pageable, total);
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesByAuthor(Long authorId) {
-        return repository.findSchedulesByAuthor(authorId);
+    public Page<ScheduleResponseDto> findSchedulesByAuthor(Long authorId, Pageable pageable) {
+        List<ScheduleResponseDto> schedules = repository.findSchedulesByAuthor(authorId, pageable);
+        int total = repository.countByAuthor(authorId);
+
+        return new PageImpl<>(schedules, pageable, total);
     }
 
     @Override
