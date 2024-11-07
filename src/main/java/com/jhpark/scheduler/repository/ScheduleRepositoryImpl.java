@@ -16,9 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Repository
@@ -47,30 +45,27 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public List<ScheduleResponseDto> findAllSchedules(Pageable pageable) {
-        String sql = "SELECT * FROM SCHEDULES ORDER BY MOD_DATE DESC LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(sql, schedulesRowMapper(), pageable.getPageSize(), pageable.getOffset());
-    }
+    public List<ScheduleResponseDto> findSchedules(Optional<Long> authorId, Optional<LocalDate> modDate, Pageable pageable) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM SCHEDULES");
+        List<Object> params = new ArrayList<>();
 
-    @Override
-    public List<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate, Pageable pageable) {
-        String sql = "SELECT * FROM SCHEDULES WHERE USER_ID = ? AND DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(sql,
-                schedulesRowMapper(), authorId, modDate, pageable.getPageSize(), pageable.getOffset());
-    }
+        // 조건에 따라 SQL 쿼리 생성
+        if (authorId.isPresent() && modDate.isPresent()) {
+            sql.append(" WHERE USER_ID = ? AND DATE(MOD_DATE) = ?");
+            params.add(authorId.get());
+            params.add(modDate.get());
+        } else if (authorId.isPresent()) {
+            sql.append(" WHERE USER_ID = ?");
+            params.add(authorId.get());
+        } else if (modDate.isPresent()) {
+            sql.append(" WHERE DATE(MOD_DATE) = ?");
+            params.add(modDate.get());
+        }
+        sql.append(" ORDER BY MOD_DATE DESC LIMIT ? OFFSET ?");
+        params.add(pageable.getPageSize());
+        params.add(pageable.getOffset());
 
-    @Override
-    public List<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate, Pageable pageable) {
-        String sql = "SELECT * FROM SCHEDULES WHERE DATE(MOD_DATE) = ? ORDER BY MOD_DATE DESC LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(sql, schedulesRowMapper(), modDate, pageable.getPageSize(), pageable.getOffset());
-
-    }
-
-    @Override
-    public List<ScheduleResponseDto> findSchedulesByAuthor(Long authorId, Pageable pageable) {
-        String sql = "SELECT * FROM SCHEDULES WHERE USER_ID = ? ORDER BY MOD_DATE DESC LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(sql, schedulesRowMapper(), authorId, pageable.getPageSize(), pageable.getOffset());
-
+        return jdbcTemplate.query(sql.toString(), schedulesRowMapper(), params.toArray());
     }
 
     @Override
@@ -124,26 +119,22 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public int countByAuthorAndDate(Long authorId, LocalDate modDate) {
-        String sql = "SELECT COUNT(*) FROM SCHEDULES WHERE USER_ID = ? AND DATE(MOD_DATE) = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, authorId, modDate);
-    }
-
-    @Override
-    public int countByAuthor(Long authorId) {
-        String sql = "SELECT COUNT(USER_ID) FROM SCHEDULES WHERE USER_ID = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, authorId);
-    }
-
-    @Override
-    public int countByDate(LocalDate modDate) {
-        String sql = "SELECT COUNT(MOD_DATE) FROM SCHEDULES WHERE MOD_DATE = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, modDate);
-    }
-
-    @Override
-    public int countAll() {
+    public int countSchedules(Optional<Long> authorId, Optional<LocalDate> modDate) {
         String sql = "SELECT COUNT(*) FROM SCHEDULES";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+        List<Object> params = new ArrayList<>();
+
+        if (authorId.isPresent() && modDate.isPresent()) {
+            sql += " WHERE USER_ID = ? AND DATE(MOD_DATE) = ?";
+            params.add(authorId.get());
+            params.add(modDate.get());
+        } else if (authorId.isPresent()) {
+            sql += " WHERE USER_ID = ?";
+            params.add(authorId.get());
+        } else if (modDate.isPresent()) {
+            sql += " WHERE DATE(MOD_DATE) = ?";
+            params.add(modDate.get());
+        }
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, params.toArray());
     }
 }

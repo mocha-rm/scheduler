@@ -6,18 +6,13 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ScheduleRepository {
     ScheduleResponseDto saveSchedule(Schedule schedule);
 
-    List<ScheduleResponseDto> findAllSchedules(Pageable pageable);
-
-    List<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate, Pageable pageable);
-
-    List<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate, Pageable pageable);
-
-    List<ScheduleResponseDto> findSchedulesByAuthor(Long authorId, Pageable pageable);
+    List<ScheduleResponseDto> findSchedules(Optional<Long> authorId, Optional<LocalDate> modDate, Pageable pageable);
 
     Schedule findScheduleById(Long id);
 
@@ -25,11 +20,5 @@ public interface ScheduleRepository {
 
     int deleteScheduleById(Long id);
 
-    int countByAuthorAndDate(Long authorId, LocalDate modDate);
-
-    int countByAuthor(Long authorId);
-
-    int countByDate(LocalDate modDate);
-
-    int countAll();
+    int countSchedules(Optional<Long> authorId, Optional<LocalDate> modDate);
 }

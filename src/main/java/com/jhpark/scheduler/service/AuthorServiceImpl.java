@@ -6,7 +6,6 @@ import com.jhpark.scheduler.entity.Author;
 import com.jhpark.scheduler.repository.AuthorRepository;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 @Service

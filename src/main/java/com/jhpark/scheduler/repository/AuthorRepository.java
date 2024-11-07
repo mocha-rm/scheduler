@@ -7,6 +7,6 @@ import java.util.List;
 
 
 public interface AuthorRepository {
-    public AuthorResponseDto saveAuthor(Author author);
-    public List<AuthorResponseDto> findAllAuthors();
+    AuthorResponseDto saveAuthor(Author author);
+    List<AuthorResponseDto> findAllAuthors();
 }

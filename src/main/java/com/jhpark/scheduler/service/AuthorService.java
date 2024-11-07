@@ -6,6 +6,6 @@ import com.jhpark.scheduler.dto.AuthorResponseDto;
 import java.util.List;
 
 public interface AuthorService {
-    public AuthorResponseDto saveAuthor(AuthorRequestDto dto);
-    public List<AuthorResponseDto> findAllAuthors();
+    AuthorResponseDto saveAuthor(AuthorRequestDto dto);
+    List<AuthorResponseDto> findAllAuthors();
 }

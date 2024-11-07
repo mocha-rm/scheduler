@@ -12,9 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.plaf.basic.BasicOptionPaneUI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -33,35 +33,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Page<ScheduleResponseDto> findAllSchedules(Pageable pageable) {
-        List<ScheduleResponseDto> schedules = repository.findAllSchedules(pageable);
-        int total = repository.countAll();
-
+    public Page<ScheduleResponseDto> findSchedules(Optional<Long> authorId, Optional<LocalDate> modDate, Pageable pageable) {
+        List<ScheduleResponseDto> schedules = repository.findSchedules(authorId, modDate, pageable);
+        int total = calculateTotalCount(authorId, modDate);
         return new PageImpl<>(schedules, pageable, total);
     }
 
-    @Override
-    public Page<ScheduleResponseDto> findSchedulesByAuthorAndDate(Long authorId, LocalDate modDate, Pageable pageable) {
-        List<ScheduleResponseDto> schedules = repository.findSchedulesByAuthorAndDate(authorId, modDate, pageable);
-        int total = repository.countByAuthorAndDate(authorId, modDate);
-
-        return new PageImpl<>(schedules, pageable, total);
-    }
-
-    @Override
-    public Page<ScheduleResponseDto> findSchedulesByDate(LocalDate modDate, Pageable pageable) {
-        List<ScheduleResponseDto> schedules = repository.findSchedulesByDate(modDate, pageable);
-        int total = repository.countByDate(modDate);
-
-        return new PageImpl<>(schedules, pageable, total);
-    }
-
-    @Override
-    public Page<ScheduleResponseDto> findSchedulesByAuthor(Long authorId, Pageable pageable) {
-        List<ScheduleResponseDto> schedules = repository.findSchedulesByAuthor(authorId, pageable);
-        int total = repository.countByAuthor(authorId);
-
-        return new PageImpl<>(schedules, pageable, total);
+    private int calculateTotalCount(Optional<Long> authorId, Optional<LocalDate> modDate) {
+        return repository.countSchedules(authorId, modDate);
     }
 
     @Override

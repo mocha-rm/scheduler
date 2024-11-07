@@ -35,36 +35,23 @@ public class ScheduleController {
 
     /*
      * 전체 일정 조회
+     * Default 조회 (조건 없이) http://localhost:8080/schedules?page=0
+     * 작성자와 날짜로 조회 http://localhost:8080/schedules?authorId=1&modDate=2024-11-07&page=0
+     * 작성자로 조회 http://localhost:8080/schedules?authorId=1&page=2
+     * 날짜로 조회 http://localhost:8080/schedules?modDate=2024-11-06&page=1
      * */
     @GetMapping
     public ResponseEntity<Page<ScheduleResponseDto>> findAllSchedules(
             @RequestParam Optional<Long> authorId,
             @RequestParam Optional<LocalDate> modDate,
-            @PageableDefault(page = 0, size = 10) Pageable pageable
+            @PageableDefault(page = 0, size = 10) Pageable pageable // page : 현재 페이지 번호, size : 페이지에 보여줄 일정의 수
     ) {
-        Page<ScheduleResponseDto> result = null;
-        if (authorId.isPresent() && modDate.isPresent()) {
-            //작성자와 날짜 둘 다 조건으로 넣어서 전체조회
-            // http://localhost:8080/schedules?authorId=1&modDate=2024-11-01
-            result = scheduleService.findSchedulesByAuthorAndDate(authorId.get(), modDate.get(), pageable);
-        } else if (authorId.isPresent()) {
-            // 작성자를 조건으로 넣어서 전체조회
-            // http://localhost:8080/schedules?authorId=1&modDate=2024-11-07
-            result = scheduleService.findSchedulesByAuthor(authorId.get(), pageable);
-        } else if (modDate.isPresent()) {
-            // 날짜를 조건으로 넣어서 전체조회
-            // http://localhost:8080/schedules?modDate=2024-11-07
-            result = scheduleService.findSchedulesByDate(modDate.get(), pageable);
-        } else {
-            // 필터링 없이 전체조회
-            // http://localhost:8080/schedules
-            result = scheduleService.findAllSchedules(pageable);
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.findSchedules(authorId, modDate, pageable), HttpStatus.OK);
     }
 
     /*
      * 선택 일정 조회
+     * http://localhost:8080/schedules/1
      * */
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
@@ -73,6 +60,7 @@ public class ScheduleController {
 
     /*
      * 일정 수정
+     * http://localhost:8080/schedules/1
      * */
     @PatchMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> patchScheduleById(@PathVariable Long id, @RequestBody ScheduleRequestDto dto) {
@@ -81,6 +69,7 @@ public class ScheduleController {
 
     /*
      * 일정 삭제
+     * http://localhost:8080/schedules/1
      * */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteScheduleById(@PathVariable Long id, @RequestBody ScheduleRequestDto dto) {
