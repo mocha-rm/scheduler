@@ -8,7 +8,7 @@
 | -------- | ------ |-----------------|-------------------------------------------------------| -------------------- |----------------------|
 | 전체 일정 조회 | GET    | /schedules      | pram : name(optional), datetime(optional)             | 복수 응답 | 200: 정상조회, 404: 조회실패 |
 | 선택 일정 조회 | GET    | /schedules/{id} | pathvariable : id                                     | 단일 응답 | 200: 정상조회, 404: 조회실패 |
-| 일정 생성    | POST   | /schedules/{id} | pathvariable : id<br>body : title, password, datetime | 등록 정보  | 201: 정상등록, 400: 생성실패 |
+| 일정 생성    | POST   | /schedules/{authorId} | pathvariable : authorId<br>body : title, password, datetime | 등록 정보  | 201: 정상등록, 400: 생성실패 |
 | 일정 수정    | PUT    | /schedules/{id} | pathvariable : id<br>body : title, password           | 수정 정보 | 200: 정상수정, 400: 수정실패 |
 | 일정 삭제    | DELETE | /schedules/{id} | pathvariable : id<br>body : password                  | 삭제 정보       | 200: 정상삭제, 400: 삭제실패 |
 
