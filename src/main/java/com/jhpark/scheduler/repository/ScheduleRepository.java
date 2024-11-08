@@ -2,6 +2,7 @@ package com.jhpark.scheduler.repository;
 
 import com.jhpark.scheduler.dto.ScheduleResponseDto;
 import com.jhpark.scheduler.entity.Schedule;
+import com.jhpark.scheduler.exception.CustomException;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ public interface ScheduleRepository {
 
     List<ScheduleResponseDto> findSchedules(Optional<Long> authorId, Optional<LocalDate> modDate, Pageable pageable);
 
-    Schedule findScheduleById(Long id);
+    Schedule findScheduleById(Long id) throws CustomException;
 
     int patchSchedule(Long id, String title);
 

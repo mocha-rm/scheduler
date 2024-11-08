@@ -3,14 +3,16 @@ package com.jhpark.scheduler.service;
 import com.jhpark.scheduler.dto.ScheduleRequestDto;
 import com.jhpark.scheduler.dto.ScheduleResponseDto;
 import com.jhpark.scheduler.entity.Schedule;
+import com.jhpark.scheduler.exception.CustomException;
+import com.jhpark.scheduler.exception.ErrorCode;
 import com.jhpark.scheduler.repository.ScheduleRepository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -44,37 +46,39 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleResponseDto findScheduleById(Long id) {
+    public ScheduleResponseDto findScheduleById(Long id) throws CustomException {
         Schedule schedule = repository.findScheduleById(id);
         return new ScheduleResponseDto(schedule);
     }
 
+    @Transactional
     @Override
-    public ScheduleResponseDto patchScheduleById(Long id, String password, String title) {
+    public ScheduleResponseDto patchScheduleById(Long id, String password, String title) throws CustomException {
         if (password.equals(repository.findScheduleById(id).getPassword())) { //비밀번호 일치 확인
             int updatedRow = repository.patchSchedule(id, title);
             if (updatedRow == 0) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                throw new CustomException(ErrorCode.INVALID_REQUEST);
             }
 
             Schedule schedule = repository.findScheduleById(id);
             return new ScheduleResponseDto(schedule);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password does not match.");
+            throw new CustomException(ErrorCode.PASSWORD_INCORRECT);
         }
     }
 
+    @Transactional
     @Override
-    public String deleteScheduleById(Long id, String password) {
+    public String deleteScheduleById(Long id, String password) throws CustomException {
         if (password.equals(repository.findScheduleById(id).getPassword())) { //비밀번호 일치 확인
             int result = repository.deleteScheduleById(id);
             if (result == 0) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                throw new CustomException(ErrorCode.INVALID_REQUEST);
             }
 
             return "Delete Success";
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password does not match.");
+            throw new CustomException(ErrorCode.PASSWORD_INCORRECT);
         }
     }
 }

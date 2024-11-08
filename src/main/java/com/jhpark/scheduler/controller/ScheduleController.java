@@ -2,8 +2,10 @@ package com.jhpark.scheduler.controller;
 
 import com.jhpark.scheduler.dto.ScheduleRequestDto;
 import com.jhpark.scheduler.dto.ScheduleResponseDto;
+import com.jhpark.scheduler.exception.CustomException;
 import com.jhpark.scheduler.service.ScheduleService;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -29,7 +31,7 @@ public class ScheduleController {
      * 일정 생성
      * */
     @PostMapping("/{authorId}")
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@PathVariable Long authorId, @RequestBody ScheduleRequestDto dto) {
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@PathVariable Long authorId, @RequestBody @Valid ScheduleRequestDto dto) {
         return new ResponseEntity<>(scheduleService.saveSchedule(dto, authorId), HttpStatus.CREATED);
     }
 
@@ -54,7 +56,7 @@ public class ScheduleController {
      * http://localhost:8080/schedules/1
      * */
     @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
+    public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id) throws CustomException {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
@@ -63,7 +65,7 @@ public class ScheduleController {
      * http://localhost:8080/schedules/1
      * */
     @PatchMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> patchScheduleById(@PathVariable Long id, @RequestBody ScheduleRequestDto dto) {
+    public ResponseEntity<ScheduleResponseDto> patchScheduleById(@PathVariable Long id, @RequestBody ScheduleRequestDto dto) throws CustomException {
         return new ResponseEntity<>(scheduleService.patchScheduleById(id, dto.getPassword(), dto.getTitle()), HttpStatus.OK);
     }
 
@@ -72,7 +74,7 @@ public class ScheduleController {
      * http://localhost:8080/schedules/1
      * */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteScheduleById(@PathVariable Long id, @RequestBody ScheduleRequestDto dto) {
+    public ResponseEntity<String> deleteScheduleById(@PathVariable Long id, @RequestBody ScheduleRequestDto dto) throws CustomException {
         return new ResponseEntity<>(scheduleService.deleteScheduleById(id, dto.getPassword()), HttpStatus.OK);
     }
 }

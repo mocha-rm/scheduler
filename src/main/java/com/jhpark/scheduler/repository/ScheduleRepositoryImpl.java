@@ -2,6 +2,8 @@ package com.jhpark.scheduler.repository;
 
 import com.jhpark.scheduler.dto.ScheduleResponseDto;
 import com.jhpark.scheduler.entity.Schedule;
+import com.jhpark.scheduler.exception.CustomException;
+import com.jhpark.scheduler.exception.ErrorCode;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +11,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -69,10 +70,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public Schedule findScheduleById(Long id) {
+    public Schedule findScheduleById(Long id) throws CustomException {
         List<Schedule> result = jdbcTemplate.query("SELECT * FROM SCHEDULES WHERE SCHEDULE_ID = ?"
                 , scheduleRowMapper(), id);
-        return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return result.stream().findAny().orElseThrow(() -> new CustomException(ErrorCode.DELETED_SCHEDULE));
     }
 
     @Override
