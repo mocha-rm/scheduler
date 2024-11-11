@@ -2,10 +2,11 @@ package com.jhpark.scheduler.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum ErrorCode {
     PASSWORD_INCORRECT(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다"),
     INVALID_REQUEST(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다"),
